@@ -16,7 +16,7 @@ export class HomeProductsService {
     if (gender) {
       url += `&gender=${gender}`;
     }
-    console.log('API URL:', url);
+    console.log('Hello API URL:', url);
     return this._http.get<Product[]>(url, { withCredentials: true });
   }
 }
