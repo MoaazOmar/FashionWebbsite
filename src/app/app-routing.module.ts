@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { NavbarAdminComponent } from './admin/navbar-admin/navbar-admin.component';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component'; // Add this
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { ProductsComponent } from './shopping/products/products.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { ShoppingComponent } from './shopping/shopping.component';
@@ -22,15 +22,16 @@ import { ManageOrdersComponent } from './admin/manage-orders/manage-orders.compo
 import { AdminGuard } from './guards/admin.guard';
 import { NonAdminGuard } from './guards/nonadmin--skip-tests.guard';
 import { NotfoundComponent } from './notfound/notfound.component';
+
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [NonAdminGuard] },
   { path: 'search-results/:query', component: SearchResultsComponent, canActivate: [NonAdminGuard] },
   { path: 'shopping', component: ShoppingComponent, canActivate: [NonAdminGuard] },
-  { path: 'shopping-products', component: ProductsComponent, canActivate: [NonAdminGuard]},
+  { path: 'shopping-products', component: ProductsComponent, canActivate: [NonAdminGuard] },
   { path: 'login', component: LoginComponent, canActivate: [accessGuard] },
   { path: 'signup', component: SignupComponent, canActivate: [accessGuard] },
-  { path: 'cart', component: CartComponent, canActivate: [NonAdminGuard]},
-  { path: 'checkout', component: CheckoutComponent, canActivate: [NonAdminGuard]},
+  { path: 'cart', component: CartComponent, canActivate: [NonAdminGuard] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [NonAdminGuard] },
   { path: 'orders', component: OrdersComponent, canActivate: [NonAdminGuard] },
   { path: 'success', component: SuccessComponent, canActivate: [NonAdminGuard] },
   { path: 'products/:id', component: ProductslistComponent, canActivate: [NonAdminGuard] },
@@ -51,7 +52,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })], // Add useHash: true here
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
