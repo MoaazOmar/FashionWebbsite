@@ -113,9 +113,10 @@ export class HeaderComponent implements OnInit {
   onSearchInput(event: Event) {
     const target = event.target as HTMLInputElement;
     this.searchQuery = target.value;
+    console.log('Search query:', this.searchQuery);
     this.searchSubject.next(this.searchQuery);
   }
-
+  
   goToSearchComponent() {
     this.router.navigate(['/search-results', this.searchQuery]);
     this.isClicked = false;

@@ -9,7 +9,7 @@ import { AddFavoriteService } from './addFavourites.porducts.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth'; // Base URL for auth endpoints
+  private apiUrl = 'https://holy-althea-moaazomar-463f67fb.koyeb.app/auth';
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
 
@@ -28,9 +28,9 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // Check if user is logged in
+  // Check if user is logged in (token exists and user is set)
   public isLoggedIn(): boolean {
-    return !!this.currentUserValue;
+    return !!this.getToken() && !!this.currentUserValue;
   }
 
   // Check if user is an admin
@@ -38,19 +38,25 @@ export class AuthService {
     return this.currentUserValue?.isAdmin === true;
   }
 
-  // Store user in localStorage and update subject
-  private setUser(user: User): void {
+  // Store user and token in localStorage and update subject
+  private setUser(user: User, token: string): void {
     console.log('Setting user:', user);
     localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('token', token);
     this.currentUserSubject.next(user);
+  }
+
+  // Get the stored token
+  public getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   // Signup
   signup(signupRequest: SignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, signupRequest, { withCredentials: true }).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, signupRequest).pipe(
       tap((response: AuthResponse) => {
-        if (response.user) {
-          this.setUser(response.user);
+        if (response.user && response.token) {
+          this.setUser(response.user, response.token);
         }
       })
     );
@@ -58,15 +64,11 @@ export class AuthService {
 
   // Login
   login(loginRequest: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, loginRequest, { withCredentials: true }).pipe(
-      tap((response: any) => {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, loginRequest).pipe(
+      tap((response: AuthResponse) => {
         console.log('Login response:', response);
-        const user = Array.isArray(response)
-          ? response.find((item: any) => item.username || item.email)
-          : response.user;
-        console.log('This is user after logged in:', user);
-        if (user) {
-          this.setUser(user);
+        if (response.user && response.token) {
+          this.setUser(response.user, response.token);
         }
       })
     );
@@ -75,6 +77,7 @@ export class AuthService {
   // Logout
   logout(): void {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
     this._addFavoriteService.clearLove();
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);

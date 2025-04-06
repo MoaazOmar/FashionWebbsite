@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, OnInit, OnChanges } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ShoppinglistService } from '../../services/shoppinglist.service';
 
@@ -7,7 +7,7 @@ import { ShoppinglistService } from '../../services/shoppinglist.service';
   templateUrl: './browse-categories.component.html',
   styleUrls: ['./browse-categories.component.css']
 })
-export class BrowseCategoriesComponent implements OnInit  {
+export class BrowseCategoriesComponent implements OnInit {
   @ViewChild('sliderContainer') sliderContainer!: ElementRef;
   @ViewChild('sliderWrapper') sliderWrapper!: ElementRef;
 
@@ -15,14 +15,14 @@ export class BrowseCategoriesComponent implements OnInit  {
   slidesPerView = window.innerWidth <= 768 ? 2 : 4;
 
   categories = [
-    { name: 'Dresses', gender: 'Women', productCount: 0, image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae' },
-    { name: 'Tops', gender: 'Women', productCount: 0, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c' },
-    { name: 'Shirts', gender: 'Men', productCount: 0, image: 'https://cdn.pixabay.com/photo/2023/05/23/08/49/fashion-8012239_1280.jpg' },
+    { name: 'Dresses', gender: 'Female', productCount: 0, image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae' },
+    { name: 'Tops', gender: 'Female', productCount: 0, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c' },
+    { name: 'Shirts', gender: 'Male', productCount: 0, image: 'https://cdn.pixabay.com/photo/2023/05/23/08/49/fashion-8012239_1280.jpg' },
     { name: 'Accessories', gender: 'Special', productCount: 0, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a' },
     { name: 'Footwear', gender: 'Special', productCount: 0, image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2' },
     { name: 'Hijab', gender: 'Special', productCount: 0, image: 'https://cdn.pixabay.com/photo/2017/08/07/16/48/black-2605605_1280.jpg' },
     { name: 'Glasses', gender: 'Special', productCount: 0, image: 'https://cdn.pixabay.com/photo/2014/11/09/20/06/woman-524141_1280.jpg' },
-    { name: 'Jackets', gender: 'Women', productCount: 0, image: 'https://images.unsplash.com/photo-1519235624215-85175d5eb36e' }
+    { name: 'Jackets', gender: 'Female', productCount: 0, image: 'https://images.unsplash.com/photo-1519235624215-85175d5eb36e' }
   ];
 
   constructor(private router: Router, private _shoppinglistService: ShoppinglistService) {}
@@ -32,7 +32,7 @@ export class BrowseCategoriesComponent implements OnInit  {
   }
 
   fetchCategoryCounts(): void {
-    this._shoppinglistService.getCombinedProducts({}).subscribe({
+    this._shoppinglistService.getMainProducts({}).subscribe({
       next: (response: any) => {
         const categoriesWithCounts = response.categoriesWithCounts || [];
         this.categories.forEach(category => {
@@ -45,15 +45,15 @@ export class BrowseCategoriesComponent implements OnInit  {
         });
         setTimeout(() => this.updateSlider());
       },
-      error: (err) => console.error('Error fetching category counts:', err)
+      error: (err: any) => console.error('Error fetching category counts:', err) // Added type 'any'
     });
   }
 
-  // Updated routing to match your desired URL: /shopping?gender=women&category=Tops
+  // Updated routing to /products?gender=female&category=Tops
   navigateToShoppingList(category: { name: string; gender: string }) {
-    this.router.navigate(['/shopping'], {
+    this.router.navigate(['/products'], {
       queryParams: {
-        gender: category.gender.toLowerCase(), // Convert to lowercase for consistency
+        gender: category.gender.toLowerCase(), // Convert to lowercase for consistency (female, male, special)
         category: category.name
       }
     });
@@ -95,5 +95,4 @@ export class BrowseCategoriesComponent implements OnInit  {
     this.currentIndex = Math.max(this.currentIndex, 0);
     this.updateSlider();
   }
-
 }

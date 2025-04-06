@@ -90,7 +90,7 @@
 
 <!-- Product Container with a single loop -->
 <div class="product-container" [@listAnimation]="allProducts.length" *ngIf="!isLoading">
-  <div *ngFor="let product of allProducts" class="product-item" [class.visible]="product.visible">
+  <div *ngFor="let product of allProducts" class="product-item">
     <img [src]="product.image[0]" alt="Product Image" [routerLink]="['/products', product._id]"/>
     <div class="product-info">
       <h4>{{ product.name }}</h4>

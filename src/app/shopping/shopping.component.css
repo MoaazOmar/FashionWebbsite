@@ -385,3 +385,86 @@ body {
     transition: width 0.05s linear; 
     width: 0%;
   }
+  .products-button {
+    --primary-accent: #2F2F2F;
+    --secondary-accent: #FF5E00;
+    --geometric-stroke: 2px;
+    
+    position: relative;
+    display: inline-block;
+    perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  button {
+    position: relative;
+    padding: 1.2rem 2.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-style: preserve-3d;
+    overflow: hidden;
+  }
+  
+  button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-accent);
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  .button-text {
+    position: relative;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    mix-blend-mode: difference;
+    z-index: 2;
+  }
+  
+  .assembly-line {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    background: var(--secondary-accent);
+    clip-path: polygon(100% 50%, 0 0, 0 100%);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  button:hover {
+    transform: translateX(8px);
+  }
+  
+  button:hover::before {
+    clip-path: polygon(0 0, calc(100% - 32px) 0, 100% 50%, calc(100% - 32px) 100%, 0 100%);
+    background: var(--secondary-accent);
+  }
+  
+  button:hover .assembly-line {
+    right: -18px;
+    width: 36px;
+    height: 36px;
+    background: var(--primary-accent);
+  }
+  
+  /* Optional: Add subtle animation on load */
+  @keyframes assemble {
+    0% { opacity: 0; transform: translateX(-20px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  
+  .products-button {
+    animation: assemble 0.6s ease-out forwards;
+  }

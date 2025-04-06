@@ -2,20 +2,24 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnInit } from '@angula
 import { ShoppinglistService } from '../../services/shoppinglist.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../../interfaces/product.model';
+import { Subscription } from 'rxjs';
 declare const Swiper: any;
 
 @Component({
   selector: 'app-winter-section',
   templateUrl: './winter-section.component.html',
-  styleUrls: ['./winter-section.component.css'],
-  // encapsulation: ViewEncapsulation.None // Optional: if you want styles to apply beyond component scope
+  styleUrls: ['./winter-section.component.css']
 })
 export class WinterSectionComponent implements OnInit, AfterViewInit {
   @ViewChild('winterEffect') winterEffect!: ElementRef<HTMLCanvasElement>;
   @ViewChild('swiperRef') swiperRef!: ElementRef<HTMLDivElement>;
 
   winterProducts: Product[] = [];
-  isDarkTheme: boolean = false; // Track theme state
+  isDarkTheme: boolean = false;
+  isLoading: boolean = false;
+
+  private dataSubscription!: Subscription;
+  private loadingSubscription!: Subscription;
 
   constructor(
     private shoppingService: ShoppinglistService,
@@ -24,33 +28,45 @@ export class WinterSectionComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.checkDarkMode();
+    this.loadingSubscription = this.shoppingService.getLoadingState().subscribe(isLoading => {
+      this.isLoading = isLoading;
+    });
+
+    this.dataSubscription = this.shoppingService.getFeaturedData().subscribe(response => {
+      if (response) {
+        this.updateWinterProducts(response);
+      }
+    });
+
     this.route.queryParams.subscribe(param => {
-      const gender = param['gender'];
-      console.log('Frontend Gender Param:', gender);
-      this.fetchWinterProducts(gender);
+      this.fetchWinterProducts(param['gender']);
     });
   }
 
   ngAfterViewInit(): void {
     this.initSnowEffect();
-    this.initSwiper();
   }
 
-  // Theme toggle method
-  toggleTheme(): void {
-    this.isDarkTheme = !this.isDarkTheme;
-    const winterSection = document.querySelector('app-winter-section') as HTMLElement;
-    if (winterSection) {
-      if (this.isDarkTheme) {
-        winterSection.classList.add('dark');
-      } else {
-        winterSection.classList.remove('dark');
-      }
-    }
+  ngOnDestroy(): void {
+    if (this.dataSubscription) this.dataSubscription.unsubscribe();
+    if (this.loadingSubscription) this.loadingSubscription.unsubscribe();
   }
 
-  // Rest of your existing methods remain unchanged
+  private updateWinterProducts(response: any): void {
+    this.winterProducts = response.winterCollection.map((product: Product) => ({
+      ...product,
+      image: product.image.map(img => `https://holy-althea-moaazomar-463f67fb.koyeb.app/images/${img}`),
+    }));
+    console.log('Winter Collection is ', this.winterProducts);
+    setTimeout(() => this.initSwiper(), 100);
+  }
+
+  fetchWinterProducts(gender: string): void {
+    this.shoppingService.getFeaturedCollections(gender || 'all').subscribe();
+  }
+
   initSwiper(): void {
+    if (this.isLoading || this.winterProducts.length === 0) return;
     const swiperElement = this.swiperRef?.nativeElement;
     if (swiperElement) {
       new Swiper(swiperElement, {
@@ -79,24 +95,23 @@ export class WinterSectionComponent implements OnInit, AfterViewInit {
           prevEl: '.swiper-button-prev',
         },
       });
-    } else {
-      console.error('Swiper container not found in the DOM.');
     }
   }
 
-  fetchWinterProducts(gender: string): void {
-    const params = { gender: gender || 'all' };
-    this.shoppingService.getCombinedProducts(params).subscribe({
-      next: response => {
-        this.winterProducts = response.winterCollection.map((product: Product) => ({
-          ...product,
-          image: product.image.map(img => `http://localhost:3000/images/${img}`),
-        }));
-        console.log('Winter Collection is ', this.winterProducts);
-        setTimeout(() => this.initSwiper(), 0);
+  toggleTheme(): void {
+    this.isDarkTheme = !this.isDarkTheme;
+    const winterSection = document.querySelector('app-winter-section') as HTMLElement;
+    if (winterSection) winterSection.classList.toggle('dark', this.isDarkTheme);
+  }
 
-      },
-      error: err => console.error('Error fetching products:', err),
+  checkDarkMode(): void {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.isDarkTheme = true;
+      document.querySelector('app-winter-section')?.classList.add('dark');
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      this.isDarkTheme = event.matches;
+      document.querySelector('app-winter-section')?.classList.toggle('dark', event.matches);
     });
   }
 
@@ -140,17 +155,6 @@ export class WinterSectionComponent implements OnInit, AfterViewInit {
       <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       <line x1="11" y1="8" x2="11" y2="14"></line>
     </svg>`;
-  }
-
-  checkDarkMode(): void {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this.isDarkTheme = true;
-      document.querySelector('app-winter-section')?.classList.add('dark');
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-      this.isDarkTheme = event.matches;
-      document.querySelector('app-winter-section')?.classList.toggle('dark', event.matches);
-    });
   }
 
   initSnowEffect(): void {

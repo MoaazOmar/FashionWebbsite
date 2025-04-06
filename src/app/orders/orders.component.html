@@ -1,35 +1,28 @@
 <div class="orders-container">
   <h1 class="fashion-title">Your Orders</h1>
   
-  <!-- Conditional display based on login status -->
-  <div *ngIf="!isLoggedIn" class="no-orders">
-    <div class="empty-bag-illustration"></div>
-    <p>Please log in to view your orders</p>
-    <button class="start-shopping-btn" (click)="navigateToLogin()">Start Login</button>
-    
+  <!-- Not Logged In State -->
+  <div *ngIf="!isLoggedIn" class="no-orders text-center">
+    <div class="animate-float wiggle-animation" [innerHTML]="notLoggedInSvg"></div>
+    <h2>Sign In to View Orders</h2>
+    <p>Please log in to your account to view your order history and track your deliveries.</p>
+    <button class="start-shopping-btn" (click)="navigateToLogin()">Login / Register</button>
   </div>
 
-  <div *ngIf="isLoggedIn && orders.length === 0" class="no-orders">
-    <div class="empty-bag-illustration"></div>
-    <p>No orders found</p>
-    <button class="start-shopping-btn" (click)="navigateToShopping()">Start Shopping</button>
+  <!-- Logged In, No Orders State -->
+  <div *ngIf="isLoggedIn && orders.length === 0" class="no-orders text-center">
+    <div class="animate-float wiggle-animation" [innerHTML]="noOrdersSvg"></div>
+    <h2>No Orders Yet</h2>
+    <p>You haven't placed any orders yet. Start shopping to fill your wardrobe with the latest fashion!</p>
+    <button class="start-shopping-btn" (click)="navigateToShopping()">Browse Collection</button>
   </div>
 
-  <div class="orders-grid">
-    <div *ngFor="let order of orders" 
-         class="order-card"
-         (click)="selectedOrder = order">
-      <!-- Existing order card content -->
-    </div>
-  </div>
-
-  <div class="orders-grid">
-    <div *ngFor="let order of orders" 
-         class="order-card"
-         (click)="selectedOrder = order">
-       <div class="order-header">
+  <!-- Orders List -->
+  <div class="orders-grid" *ngIf="isLoggedIn && orders.length > 0">
+    <div *ngFor="let order of orders" class="order-card" (click)="selectedOrder = order">
+      <div class="order-header">
         <div class="order-meta">
-          <div class="order-id">ORDER #{{ order._id  | uppercase }}</div>
+          <div class="order-id">ORDER #{{ order._id | uppercase }}</div>
           <div class="order-date">{{ order.timestamp | date:'mediumDate' }}</div>
         </div>
         <div class="order-status" [ngClass]="order.status.toLowerCase()">
@@ -47,7 +40,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Order Details</h2>
-        <button class="close-btn" (click)="selectedOrder = null">&times;</button>
+        <button class="close-btn" (click)="selectedOrder = null">×</button>
       </div>
       
       <div class="modal-body">
@@ -65,7 +58,7 @@
           <div *ngFor="let item of selectedOrder.items" class="fashion-item">
             <div class="item-image">
               <img [src]="item.image" [alt]="item.name">
-            </div> <!-- Add actual image tag with [src] -->
+            </div>
             <div class="item-info">
               <h4>{{ item.name }}</h4>
               <p>Product ID: {{ item.productID }}</p>

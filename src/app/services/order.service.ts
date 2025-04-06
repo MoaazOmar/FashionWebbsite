@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class OrderService {
   [x: string]: any;
-  private apiUrl = 'http://localhost:3000/order';
+  private apiUrl = 'https://holy-althea-moaazomar-463f67fb.koyeb.app/order';
   constructor(private http:HttpClient) { }
   createOrder(orderData:{ customerName: string, address: string }){
     // return this.http.post(`${this.apiUrl}/create` , orderData , {withCredentials:true})

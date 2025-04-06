@@ -4,18 +4,20 @@ import { Observable } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
 import { CommentEvent, CommentPayload } from '../../interfaces/product.model';
 import { AuthService } from './auth.service';
-
+import { environment } from '../../environments/environment.prod';
 @Injectable({
     providedIn: 'root'
 })
 export class SingleProductService {
-    private apiurl = `http://localhost:3000/product`;
+    private apiUrl = `${environment.apiUrl}/product`; // Use environment variable
+    private socketUrl = environment.socketUrl; // Use environment variable
+
     constructor(
         private _http: HttpClient,
         private socket: Socket,
         private _authService: AuthService
     ) { }
-
+    
     getProduct(id: string): Observable<any> {
         return this._http.get(`${this.apiurl}/${id}`);
     }

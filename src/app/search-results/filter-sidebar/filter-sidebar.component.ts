@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, HostBinding, HostListener, ElementRef } from '@angular/core';
-import { Set } from '../../../interfaces/distinctAndCount.model';
+import { CategorySet, ColorSet, Set } from '../../../interfaces/distinctAndCount.model';
 
 @Component({
   selector: 'app-filter-sidebar',
@@ -8,8 +8,8 @@ import { Set } from '../../../interfaces/distinctAndCount.model';
 })
 export class FilterSidebarComponent {
   @Input() isOpen: boolean = false;
-  @Input() FilteringColors: Set[] = [];
-  @Input() totalCategories: Set[] = [];
+  @Input() FilteringColors: ColorSet[] = [];
+  @Input() totalCategories: CategorySet[] = [];
   @Input() productPerPageHolder: number[] = [];
   @Input() selectedColors: string[] = [];
   @Input() selectedCategories: string[] = [];

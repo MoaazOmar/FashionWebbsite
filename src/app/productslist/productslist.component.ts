@@ -66,7 +66,7 @@ export class ProductslistComponent implements OnInit {
       next: (response) => {
         this.product = {
           ...response.product,
-          image: response.product.image.map((img: string) => `http://localhost:3000/images/${img}`),
+          image: response.product.image.map((img: string) => `https://holy-althea-moaazomar-463f67fb.koyeb.app/images/${img}`),
           selectedColor: response.product.colors?.[0] || '' // Set default color
         };
         this.productLikeCount = this.product.likes;

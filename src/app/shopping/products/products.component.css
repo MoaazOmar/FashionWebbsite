@@ -18,14 +18,14 @@
   overflow: hidden;
   border-radius: 12px;
   transition: all 0.5s ease-out;
-  opacity: 0;
+  opacity: 1;
   transform: translateY(20px);
 }
 
-.product-item.visible {
+/* .product-item.visible {
   opacity: 1;
   transform: translateY(0);
-}
+} */
 
 .product-item:hover {
   transform: translateY(-10px);

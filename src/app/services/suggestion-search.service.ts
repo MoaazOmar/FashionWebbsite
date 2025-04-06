@@ -7,7 +7,7 @@ import { SuggestionsResponse } from './../../interfaces/suggestions.model';
   providedIn: 'root'
 })
 export class SuggestionSearchService {
-  private apiUrl = 'http://localhost:3000/products';
+  private apiUrl = 'https://holy-althea-moaazomar-463f67fb.koyeb.app/products';
 
   constructor(private _httpClient: HttpClient) {}
 

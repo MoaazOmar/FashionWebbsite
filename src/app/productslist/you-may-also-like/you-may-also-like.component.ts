@@ -40,8 +40,7 @@ export class YouMayAlsoLikeComponent implements AfterViewInit, OnInit {
           console.log('Related products response:', response);
           this.products = response.relatedProducts.map((product: Product) => ({
             ...product,
-            image: product.image.map(img => `http://localhost:3000/images/${img}`),
-            isFavorite: this.addFavoriteService.getLove().some(fav => fav._id === product._id), // Fixed line
+            image: product.image.map(img => `https://holy-althea-moaazomar-463f67fb.koyeb.app/images/${img}`),            isFavorite: this.addFavoriteService.getLove().some(fav => fav._id === product._id), // Fixed line
             showMenu: false
           }));
           this.cdr.detectChanges();

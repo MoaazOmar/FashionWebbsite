@@ -26,8 +26,8 @@ import { NotfoundComponent } from './notfound/notfound.component';
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [NonAdminGuard] },
   { path: 'search-results/:query', component: SearchResultsComponent, canActivate: [NonAdminGuard] },
-  { path: 'shopping', component: ShoppingComponent, canActivate: [NonAdminGuard] },
-  { path: 'shopping-products', component: ProductsComponent, canActivate: [NonAdminGuard] },
+  { path: 'shopping', component: ShoppingComponent, canActivate: [NonAdminGuard] }, // Main hub
+  { path: 'products', component: ProductsComponent, canActivate: [NonAdminGuard] }, // Product catalog
   { path: 'login', component: LoginComponent, canActivate: [accessGuard] },
   { path: 'signup', component: SignupComponent, canActivate: [accessGuard] },
   { path: 'cart', component: CartComponent, canActivate: [NonAdminGuard] },
@@ -52,7 +52,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })], // Add useHash: true here
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit, OnInit } from '@angula
 import { Product } from '../../../interfaces/product.model';
 import { ShoppinglistService } from '../../services/shoppinglist.service';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 declare const Swiper: any;
 
 @Component({
@@ -14,58 +15,58 @@ export class SummerSectionComponent implements OnInit, AfterViewInit {
   @ViewChild('swiperRef') swiperRef!: ElementRef<HTMLDivElement>;
 
   isDarkTheme: boolean = false;
+  summerCollection: Product[] = [];
+  isLoading: boolean = false;
 
-  // Mock summer collection data (replace with your service if needed)
-  summerCollection:Product[] = [];
+  private dataSubscription!: Subscription;
+  private loadingSubscription!: Subscription;
 
-  constructor(private shoppingService: ShoppinglistService ,
-              private route:ActivatedRoute
-  ) { }
+  constructor(
+    private shoppingService: ShoppinglistService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.checkDarkMode();
+    this.loadingSubscription = this.shoppingService.getLoadingState().subscribe(isLoading => {
+      this.isLoading = isLoading;
+    });
+
+    this.dataSubscription = this.shoppingService.getFeaturedData().subscribe(response => {
+      if (response) {
+        this.updateSummerCollection(response);
+      }
+    });
+
     this.route.queryParams.subscribe(param => {
-      const gender = param['gender'];
-      console.log('Frontend Gender Param:', gender);
-      this.getSummerCollections(gender)
+      this.getSummerCollections(param['gender']);
     });
   }
 
   ngAfterViewInit(): void {
     this.initSummerEffect();
-    this.initSwiper();
   }
 
-  toggleTheme(): void {
-    this.isDarkTheme = !this.isDarkTheme;
-    const summerSection = document.querySelector('app-summer-section') as HTMLElement;
-    if (summerSection) {
-      summerSection.classList.toggle('dark', this.isDarkTheme);
-    }
+  ngOnDestroy(): void {
+    if (this.dataSubscription) this.dataSubscription.unsubscribe();
+    if (this.loadingSubscription) this.loadingSubscription.unsubscribe();
   }
 
-  checkDarkMode(): void {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this.isDarkTheme = true;
-      document.querySelector('app-summer-section')?.classList.add('dark');
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-      this.isDarkTheme = event.matches;
-      document.querySelector('app-summer-section')?.classList.toggle('dark', event.matches);
-    });
+  private updateSummerCollection(response: any): void {
+    this.summerCollection = response.summerCollection.map((product: Product) => ({
+      ...product,
+      image: product.image.map(img => `https://holy-althea-moaazomar-463f67fb.koyeb.app/images/${img}`),
+    }));
+    console.log('Summer Collection is ', this.summerCollection);
+    setTimeout(() => this.initSwiper(), 100);
   }
-  getSummerCollections(gender: string){
-    const params = { gender: gender || 'all' };
-    this.shoppingService.getCombinedProducts(params).subscribe({
-      next:(response)=>{
-        this.summerCollection = response.summerCollection.map((product: Product)=>({
-          ...product,
-          image: product.image.map(img => `http://localhost:3000/images/${img}`),
-        }))
-      }
-    })
+
+  getSummerCollections(gender: string): void {
+    this.shoppingService.getFeaturedCollections(gender || 'all').subscribe();
   }
+
   initSwiper(): void {
+    if (this.isLoading || this.summerCollection.length === 0) return;
     const swiperElement = this.swiperRef?.nativeElement;
     if (swiperElement) {
       new Swiper(swiperElement, {
@@ -89,32 +90,24 @@ export class SummerSectionComponent implements OnInit, AfterViewInit {
           disableOnInteraction: false,
         },
         pagination: {
-          el: ".swiper-pagination",
+          el: '.swiper-pagination',
           clickable: true,
         },
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
         },
         breakpoints: {
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 20
-          },
-          480: {
-            slidesPerView: 'auto',
-            spaceBetween: 30
-          }
+          320: { slidesPerView: 1, spaceBetween: 20 },
+          480: { slidesPerView: 'auto', spaceBetween: 30 }
         },
         on: {
           init: function (this: any) {
-            // Add initial animation
             (this.slides as HTMLElement[]).forEach((slide: HTMLElement) => {
               slide.style.transition = 'all 0.6s cubic-bezier(0.3, 0, 0.2, 1)';
             });
           },
           slideChange: function (this: any) {
-            // Add animation to slide change
             const activeSlide = this.slides[this.activeIndex];
             if (activeSlide) {
               activeSlide.style.transition = 'all 0.6s cubic-bezier(0.3, 0, 0.2, 1)';
@@ -124,6 +117,24 @@ export class SummerSectionComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
+  toggleTheme(): void {
+    this.isDarkTheme = !this.isDarkTheme;
+    const summerSection = document.querySelector('app-summer-section') as HTMLElement;
+    if (summerSection) summerSection.classList.toggle('dark', this.isDarkTheme);
+  }
+
+  checkDarkMode(): void {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.isDarkTheme = true;
+      document.querySelector('app-summer-section')?.classList.add('dark');
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      this.isDarkTheme = event.matches;
+      document.querySelector('app-summer-section')?.classList.toggle('dark', event.matches);
+    });
+  }
+
   toggleDetails(event: Event): void {
     event.stopPropagation();
     const slide = (event.target as HTMLElement).closest('.swiper-slide');

@@ -61,6 +61,7 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { LoadingService } from './services/loading.service';
 import { SliderFashionComponent } from './shopping/slider-fashion/slider-fashion.component';
 import { NotfoundComponent } from './notfound/notfound.component'; 
+import { TokenInterceptor } from './interceptors/token';
 const config: SocketIoConfig = { 
   url: 'http://localhost:3000', 
   options: { 
@@ -134,12 +135,17 @@ const config: SocketIoConfig = {
   ],
   providers: [
     provideAnimationsAsync(),
-    LoadingService, // Add LoadingService to providers
+    LoadingService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true
-    } // Add LoadingInterceptor to HTTP_INTERCEPTORS
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

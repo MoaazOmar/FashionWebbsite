@@ -9,7 +9,7 @@
   text-align: center;
   font-size: 2.8rem;
   color: #2d3436;
-  margin-bottom: 3rem;
+  margin-bottom: 0.5rem;
   font-weight: 300;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -119,7 +119,6 @@
   align-items: center;
   padding: 1.5rem;
   border-bottom: 1px solid #eee;
-
 }
 
 .modal-header h2 {
@@ -163,9 +162,9 @@
   height: 80px;
   background: #ddd;
   border-radius: 4px;
-  
 }
-.item-image img{
+
+.item-image img {
   width: 80px;
   height: 80px;
 }
@@ -200,6 +199,53 @@
   transform: translateY(-2px);
 }
 
+/* No Orders and Not Logged In Styles */
+.no-orders {
+  text-align: center;
+  padding: 2rem;  
+}
+
+.start-shopping-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.start-shopping-btn:hover {
+  background: #2d3436;
+  transform: translateY(-2px);
+}
+
+/* Animation Styles */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+  width: 45%;
+  margin: 0 auto;
+}
+
+.wiggle-animation:hover {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+/* Keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -208,6 +254,55 @@
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+/* Dark Mode Adjustments */
+:host-context(.dark) .order-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+:host-context(.dark) .fashion-title,
+:host-context(.dark) .order-id,
+:host-context(.dark) .order-total {
+  color: #f3f4f6;
+}
+
+:host-context(.dark) .order-date,
+:host-context(.dark) .item-meta {
+  color: #9ca3af;
+}
+
+:host-context(.dark) .modal-content {
+  background: #1f2937;
+}
+
+:host-context(.dark) .fashion-item {
+  background: #374151;
+}
+
+:host-context(.dark) svg [stroke="#5D5CDE"] {
+  stroke: #60A5FA; /* Lighter blue for dark mode */
+}
+
+:host-context(.dark) svg [fill="#6B7280"],
+:host-context(.dark) svg [stroke="#6B7280"] {
+  fill: #9CA3AF;
+  stroke: #9CA3AF;
+}
+
+:host-context(.dark) svg [fill="#4B5563"],
+:host-context(.dark) svg [stroke="#4B5563"] {
+  fill: #D1D5DB;
+  stroke: #D1D5DB;
+}
+
+:host-context(.dark) svg [fill="white"] {
+  fill: #1F2937; /* Match dark background */
+}
+
+:host-context(.dark) svg [stroke="white"] {
+  stroke: #1F2937;
 }
 
 /* Responsive Design */
@@ -230,26 +325,18 @@
     width: 95%;
   }
 }
-.start-shopping-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.start-shopping-btn:hover {
-  background: #2d3436;
-  transform: translateY(-2px);
-}
-
 .no-orders {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem; /* Adjust this value to control the gap between SVG and text */
   padding: 2rem;
+  text-align: center;
+}
+
+.no-orders svg {
+  width: 150px; /* Set desired width for the SVG */
+  height: auto;
+  margin: 0 auto;
+  display: block;
 }

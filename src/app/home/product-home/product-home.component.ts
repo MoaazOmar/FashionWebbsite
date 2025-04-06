@@ -41,7 +41,7 @@ export class ProductHomeComponent implements OnInit {
         this.products = [];
         this.skip = 0;
     }
-
+    console.log('Loading products - Category:', category, 'Limit:', this.limit, 'Skip:', this.skip);
     this.productsService.getProducts(category, this.limit, this.skip).subscribe({
       next: (response) => {
         if (response && response.length > 0) {
@@ -49,7 +49,7 @@ export class ProductHomeComponent implements OnInit {
             ...this.products,
             ...response.map((product) => ({
               ...product,
-              image: product.image.map(img => `http://localhost:3000/images/${img}`),
+              image: product.image.map(img => `https://holy-althea-moaazomar-463f67fb.koyeb.app/images/${img}`),
               amount: 1,
               selectedColor: product.colors?.[0] || '' // Default to first color
             })),
@@ -57,7 +57,8 @@ export class ProductHomeComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error fetching products:', err);
+        console.error('Error fetching products:', err.status, err.error); 
+        this.isLoading = false; 
       },
       complete: () => {
         this.isLoading = false;

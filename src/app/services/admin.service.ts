@@ -9,7 +9,7 @@ import { Product } from '../../interfaces/product.model';
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = 'http://localhost:3000/admin';
+  private apiUrl = 'https://holy-althea-moaazomar-463f67fb.koyeb.app/admin';
 
   constructor(private http: HttpClient) {}
 

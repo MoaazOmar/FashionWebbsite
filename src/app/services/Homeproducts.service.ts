@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HomeProductsService {
-  private apiUrl = 'https://holy-althea-moaazomar-463f67fb.koyeb.app/';
+  private apiUrl = 'https://holy-althea-moaazomar-463f67fb.koyeb.app';
 
   constructor(private _http: HttpClient) { }
   getProducts(gender: string = '', limit: number = 3, skip: number = 0): Observable<Product[]> {

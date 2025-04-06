@@ -55,7 +55,7 @@ export class SearchinputComponent implements OnChanges , OnInit {
       next: (response) => {
         this.suggestions = response.suggestions.map((product) => ({
           ...product,
-          image: product.image.map(img => `http://localhost:3000/images/${img}`)
+          image: product.image.map(img => `https://holy-althea-moaazomar-463f67fb.koyeb.app/images/${img}`)
         }));
         this.loading = false;
       },
