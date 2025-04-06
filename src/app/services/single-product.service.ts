@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment.prod';
     providedIn: 'root'
 })
 export class SingleProductService {
-    private apiUrl = `${environment.apiUrl}/product`; // Use environment variable
+    private apiurl = `${environment.apiUrl}/product`; // Use environment variable
     private socketUrl = environment.socketUrl; // Use environment variable
 
     constructor(

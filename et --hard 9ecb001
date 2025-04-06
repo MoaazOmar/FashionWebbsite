@@ -1,0 +1,15 @@
+[33md7d4cc1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to d7d4cc1
+[33md7d4cc1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: checkout: moving from gh-pages to main
+[33mb662640[m[33m ([m[1;32mgh-pages[m[33m)[m HEAD@{2}: commit: ;
+[33m9ecb001[m HEAD@{3}: commit: editingEveryThing
+[33mf9543d3[m HEAD@{4}: commit: edited
+[33mab958df[m HEAD@{5}: commit (merge): Resolved merge conflicts
+[33m4e9d144[m HEAD@{6}: commit: edited
+[33me77853f[m HEAD@{7}: commit: Deploy fresh build to gh-pages
+[33mcd4b4ce[m HEAD@{8}: checkout: moving from gh-pages to gh-pages
+[33mcd4b4ce[m HEAD@{9}: reset: moving to HEAD
+[33mcd4b4ce[m HEAD@{10}: checkout: moving from main to gh-pages
+[33md7d4cc1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{11}: commit: modifying
+[33m8be3927[m HEAD@{12}: commit: modificationOnLink
+[33m7fefb7f[m HEAD@{13}: commit: Here DAta
+[33m54e9b5a[m HEAD@{14}: commit (initial): Initial commit
